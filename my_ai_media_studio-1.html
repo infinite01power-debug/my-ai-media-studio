@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1020"><title>My AI Media Studio</title>
+<style>
+:root{color-scheme:dark;--bg:#080d19;--panel:#101a2c;--line:#263653;--text:#eef4ff;--muted:#a7b7d3}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#14264a 0,#080d19 58%);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif;color:var(--text)}
+header{padding:24px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px;max-width:1200px;margin:auto}.logo{font-size:34px;color:#77a8ff}h1{font-size:clamp(22px,4vw,32px);margin:0}header p{margin:3px 0 0;color:var(--muted)}
+main{max-width:1200px;margin:22px auto;padding:0 14px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px}.panel{background:linear-gradient(150deg,#111d31,#0c1423);border:1px solid var(--line);border-radius:18px;padding:19px;min-width:0}
+h2{font-size:18px;margin:0 0 12px}h3{font-size:15px;margin:0 0 8px}label{display:block;font-weight:650;margin:15px 0 7px}
+textarea,input[type=text],select{width:100%;padding:12px;background:#081121;border:1px solid #354867;border-radius:10px;color:var(--text);font:inherit}textarea{min-height:125px;resize:vertical}
+button,.linkbtn{display:inline-flex;justify-content:center;align-items:center;gap:7px;border:1px solid #3d5b8a;border-radius:10px;padding:11px 13px;color:#fff;background:#182b4a;font-weight:700;text-decoration:none;cursor:pointer}
+button.primary{background:linear-gradient(100deg,#7044ff,#258aff,#29cbb8);border:0;width:100%;padding:14px;font-size:16px;margin-top:14px}
+.muted{color:var(--muted);font-size:13px}.notice{padding:12px;border-radius:10px;background:#2b2517;border:1px solid #5d4c25;color:#ffe5a6;font-size:13px;margin:12px 0}.status{padding:12px;border-radius:10px;background:#0a2130;border:1px solid #1f5360;color:#b9fff1;margin-top:12px;overflow-wrap:anywhere}
+.drop{border:1px dashed #49648a;border-radius:12px;padding:16px;background:#0a1322;margin-top:10px}audio{width:100%;margin-top:10px;display:none}hr{border:0;border-top:1px solid var(--line);margin:19px 0}.pill{display:inline-block;background:#172746;color:#c9ddff;padding:4px 9px;border-radius:99px;font-size:12px}
+.preview{width:100%;max-height:450px;object-fit:contain;background:#070b13;border:1px dashed #3b4e6c;border-radius:12px;margin-top:12px;display:none}.row{display:flex;gap:9px;flex-wrap:wrap}.row>*{flex:1}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:12px 18px 28px}
+@media(max-width:760px){main{grid-template-columns:1fr}header{padding:18px 14px}.panel{padding:15px}}
+</style></head>
+<body>
+<header><div class="logo">✦</div><div><h1>My AI Media Studio</h1><p>Personal prompt workspace for images, videos, and reference audio</p></div></header>
+<main>
+<section class="panel">
+<span class="pill">YOUR WORKSPACE</span><h2 style="margin-top:12px">1. Choose a generation type</h2>
+<div class="row"><button type="button" id="imageMode" style="background:#174c83">🖼 Image</button><button type="button" id="videoMode">🎬 Video</button></div>
+<label for="prompt">2. Describe the scene</label><textarea id="prompt" maxlength="3000" placeholder="Example: A cinematic sunrise over Himalayan mountains, a traveller drinking tea, realistic lighting, slow camera movement..."></textarea>
+<div class="muted"><span id="count">0</span>/3000 characters.</div>
+<label for="negative">Avoid (optional)</label><input id="negative" type="text" placeholder="blurry, watermark, unwanted text">
+<label for="voice">3. Reference voice (optional)</label><div class="drop"><input id="voice" type="file" accept="audio/*"><p class="muted">Choose an audio file on your device. This page previews it locally; it does not clone or upload it.</p><audio id="audioPreview" controls></audio><button type="button" id="clearVoice">Remove voice</button></div>
+<label for="style">Visual style</label><select id="style"><option>Realistic / cinematic</option><option>2D illustration</option><option>Anime</option><option>3D animation</option><option>Documentary</option><option>Watercolor</option></select>
+<label for="ratio">Aspect ratio</label><select id="ratio"><option>16:9 — YouTube</option><option>9:16 — Shorts / Reels</option><option>1:1 — Square</option><option>4:5 — Portrait</option></select>
+<div class="notice"><b>Honest limitation:</b> HTML alone cannot run large image/video models. This file prepares prompts and opens external community demos for actual generation. The voice file is not automatically passed to those demos or synchronized to video.</div>
+<button class="primary" id="makePrompt">✨ Prepare AI prompt</button><div class="status" id="status" role="status">Ready. Enter a prompt to begin.</div>
+<label for="finalPrompt">Prepared prompt</label><textarea id="finalPrompt" placeholder="Your formatted prompt appears here..."></textarea>
+<div class="row"><button type="button" id="copyPrompt">Copy prompt</button><button type="button" id="downloadPrompt">Download prompt .txt</button></div>
+<hr><h2>Save your project notes</h2><button type="button" id="saveProject">Download project notes</button>
+</section>
+<section class="panel">
+<h2>Open free community AI demos</h2><p class="muted">These directories list demos; not every demo is always available or unlimited. Queues, free quotas, sign-in, and privacy rules vary.</p>
+<div class="drop"><h3>🖼 Image generation</h3><p class="muted">Find a text-to-image demo, copy your prepared prompt into its prompt field, and generate there.</p><a class="linkbtn" href="https://huggingface.co/spaces?search=text-to-image" target="_blank" rel="noopener">Browse image demos ↗</a></div>
+<div class="drop"><h3>🎬 Video generation</h3><p class="muted">Some demos create short videos from text; others need an input image first.</p><a class="linkbtn" href="https://huggingface.co/spaces?category=video-generation" target="_blank" rel="noopener">Browse video demos ↗</a></div>
+<div class="drop"><h3>🎙 Text-to-speech / voice cloning</h3><p class="muted">Only clone a voice you own or have explicit permission to use. Review privacy terms before uploading any voice recording.</p><a class="linkbtn" href="https://huggingface.co/spaces?search=voice-cloning" target="_blank" rel="noopener">Browse voice demos ↗</a></div>
+<hr><h2>Preview an existing image</h2><p class="muted">This previews a file already on your phone/computer. It is not AI generation.</p><label for="imageFile">Choose image</label><input id="imageFile" type="file" accept="image/*"><img id="imagePreview" class="preview" alt="Selected image preview"><div class="row"><button type="button" id="downloadImage" style="display:none">Download image</button><button type="button" id="clearImage">Clear preview</button></div>
+<hr><h2>Feature checklist</h2><p>✅ Prompt editor, prompt formatting, copy and text downloads</p><p>✅ Local audio preview and existing-image preview</p><p>✅ Links to external AI image, video, and voice demos</p><p>❌ Built-in AI generation, automatic voice cloning, and voice-to-video syncing are not included</p>
+</section></main>
+<footer>Responsive on Android and computer • No paid API keys in this file • External services have separate terms and privacy policies.</footer>
+<script>
+const $=id=>document.getElementById(id);let mode='image',voiceUrl='',imageUrl='';
+$('prompt').addEventListener('input',()=> $('count').textContent=$('prompt').value.length);
+$('imageMode').onclick=()=>{mode='image';$('imageMode').style.background='#174c83';$('videoMode').style.background='#182b4a';$('status').textContent='Image mode selected.'};
+$('videoMode').onclick=()=>{mode='video';$('videoMode').style.background='#174c83';$('imageMode').style.background='#182b4a';$('status').textContent='Video mode selected.'};
+$('makePrompt').onclick=()=>{let p=$('prompt').value.trim();if(!p){$('status').textContent='Write a scene prompt first.';return;}let n=$('negative').value.trim();$('finalPrompt').value=`Task: ${mode==='image'?'Generate an image':'Generate a video'}\nScene: ${p}\nVisual style: ${$('style').value}\nAspect ratio: ${$('ratio').value}\n${mode==='video'?'Motion guidance: natural movement, coherent scene, smooth camera motion where appropriate.\n':''}${n?'Avoid: '+n+'\n':''}Quality: detailed subject, consistent lighting, clean composition.`;$('status').textContent='Prompt prepared. Copy it into a generator opened from the right panel.'};
+$('copyPrompt').onclick=async()=>{if(!$('finalPrompt').value){$('status').textContent='Prepare a prompt first.';return;}try{await navigator.clipboard.writeText($('finalPrompt').value);$('status').textContent='Prompt copied.'}catch(e){$('finalPrompt').select();$('status').textContent='Select the text, then use Copy from your device menu.'}};
+function saveText(name,txt){let a=document.createElement('a'),u=URL.createObjectURL(new Blob([txt],{type:'text/plain;charset=utf-8'}));a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000)}
+$('downloadPrompt').onclick=()=>{if(!$('finalPrompt').value){$('status').textContent='Prepare a prompt first.';return;}saveText('my-ai-prompt.txt',$('finalPrompt').value)};
+$('saveProject').onclick=()=>saveText('my-ai-media-project.txt',`MY AI MEDIA STUDIO\nMode: ${mode}\nPrompt: ${$('prompt').value}\nAvoid: ${$('negative').value}\nStyle: ${$('style').value}\nAspect ratio: ${$('ratio').value}\nPrepared prompt:\n${$('finalPrompt').value}\nNote: voice file is not embedded in these notes.`);
+$('voice').onchange=()=>{let f=$('voice').files[0];if(voiceUrl)URL.revokeObjectURL(voiceUrl);if(!f){$('audioPreview').style.display='none';return;}voiceUrl=URL.createObjectURL(f);$('audioPreview').src=voiceUrl;$('audioPreview').style.display='block';$('status').textContent='Audio selected for local preview only; not uploaded.'};
+$('clearVoice').onclick=()=>{if(voiceUrl)URL.revokeObjectURL(voiceUrl);voiceUrl='';$('voice').value='';$('audioPreview').removeAttribute('src');$('audioPreview').style.display='none';$('status').textContent='Reference audio removed.'};
+$('imageFile').onchange=()=>{let f=$('imageFile').files[0];if(imageUrl)URL.revokeObjectURL(imageUrl);if(!f)return;imageUrl=URL.createObjectURL(f);$('imagePreview').src=imageUrl;$('imagePreview').style.display='block';$('downloadImage').style.display='inline-flex';$('status').textContent='Existing image preview loaded; this is not AI generation.'};
+$('downloadImage').onclick=()=>{let f=$('imageFile').files[0];if(!f||!imageUrl)return;let a=document.createElement('a');a.href=imageUrl;a.download=f.name;a.click()};
+$('clearImage').onclick=()=>{if(imageUrl)URL.revokeObjectURL(imageUrl);imageUrl='';$('imageFile').value='';$('imagePreview').removeAttribute('src');$('imagePreview').style.display='none';$('downloadImage').style.display='none'};
+</script></body></html>
